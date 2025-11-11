@@ -30,21 +30,18 @@ class YOLOApp:
         main_frame = Frame(self.root, bg="#2b2b2b")
         main_frame.pack(fill=BOTH, expand=True)
 
-        # Left column - detected objects info
         info_frame = Frame(main_frame, width=200, bg="#1e1e1e")
         info_frame.pack(side=LEFT, fill=Y, padx=(0,0))
         Label(info_frame, text="Detected Objects", bg="#1e1e1e", fg="white", font=("Arial", 14)).pack(pady=(10, 5))
         self.info_text = Text(info_frame, bg="#2e2e2e", fg="white", height=40, width=30)
         self.info_text.pack(padx=10, pady=10, fill=BOTH, expand=True)
 
-        # Center - video display
         center_frame = Frame(main_frame, bg="black", width=600, height=600)
         center_frame.pack(side=LEFT, expand=True, fill=BOTH)
         center_frame.pack_propagate(False)
         self.video_label = Label(center_frame, bg="black")
         self.video_label.pack(expand=True)
 
-        # Media controls below video
         controls_frame = Frame(center_frame, bg="#2b2b2b")
         controls_frame.pack(fill=X, pady=10)
 
@@ -58,7 +55,6 @@ class YOLOApp:
         self.slider.bind("<Button-1>", self.on_slider_press)
         self.slider.bind("<ButtonRelease-1>", self.on_slider_release)
 
-        # Right column - detect buttons
         control_frame = Frame(main_frame, width=250, bg="#1e1e1e")
         control_frame.pack(side=RIGHT, fill=Y, padx=(0,0))
         Label(control_frame, text="Actions", bg="#1e1e1e", fg="white", font=("Arial", 14)).pack(pady=10)
@@ -66,10 +62,9 @@ class YOLOApp:
         ctk.CTkButton(control_frame, text="Import Image", width=150, height=30, command=self.detect_image).pack(pady=5, padx=20)
         ctk.CTkButton(control_frame, text="Import Video", width=150, height=30, command=self.open_video).pack(pady=5, padx=20)
         
-        # Inside your setup_ui() in YOLOApp, add at the bottom of right panel
         self.export_button = ctk.CTkButton(control_frame, text="Export", width=150, height=30, command=self.export_file)
         self.export_button.pack(side=BOTTOM, pady=20, padx=20)
-        self.export_button.pack_forget()  # hide by default
+        self.export_button.pack_forget()
 
     def update_info(self, names):
         self.info_text.delete(1.0, END)
@@ -172,7 +167,7 @@ class YOLOApp:
 
     def on_slider_press(self, event):
         self.was_playing = self.playing
-        self.toggle_play() if self.playing else None  # pause while dragging
+        self.toggle_play() if self.playing else None
 
     def on_slider_release(self, event):
         if not self.cap or self.video_length == 0:
@@ -180,7 +175,7 @@ class YOLOApp:
         frame_number = int(self.slider.get() / 100 * self.video_length)
         self.show_frame_at(frame_number)
         if self.was_playing:
-            self.toggle_play()  # resume if was playing
+            self.toggle_play()
             
     def export_file(self):
         if not self.video_path and not hasattr(self, 'last_image'):
@@ -191,7 +186,7 @@ class YOLOApp:
         if not save_path:
             return
 
-        if self.video_path:  # export video
+        if self.video_path:
             cap = cv2.VideoCapture(self.video_path)
             width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -209,7 +204,7 @@ class YOLOApp:
             cap.release()
             out.release()
 
-        else:  # export image
+        else:
             cv2.imwrite(save_path, self.last_image)
 
 root = Tk()
